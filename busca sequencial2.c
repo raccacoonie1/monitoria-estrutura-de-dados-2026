@@ -8,6 +8,8 @@ typedef struct{
 
 int buscaSequencial(Produto produtos[], int tamanho, int codigo){
 
+    int i;
+    
     for(int i = 0; i < tamanho; i++){
         if(produtos[i].codigo == codigo)
             return i;
@@ -47,7 +49,7 @@ int main(){
 
     printf("\nPressione ENTER para sair...");
     getchar(); // limpa o ENTER do scanf
-    getchar(); // espera o usuário pressionar ENTER
+    getchar(); // espera o usuÃ¡rio pressionar ENTER
 
     return 0;
 }
