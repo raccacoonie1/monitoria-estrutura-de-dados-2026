@@ -1,0 +1,168 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Estrutura de cada aluno (nó da árvore)
+struct Aluno {
+    int matricula;
+    char nome[50];
+
+    struct Aluno *esquerda;
+    struct Aluno *direita;
+};
+
+// Cria um novo aluno
+struct Aluno* criarAluno(int matricula, char nome[]) {
+
+    struct Aluno *novo;
+
+    novo = (struct Aluno*) malloc(sizeof(struct Aluno));
+
+    novo->matricula = matricula;
+    strcpy(novo->nome, nome);
+
+    novo->esquerda = NULL;
+    novo->direita = NULL;
+
+    return novo;
+}
+
+// Insere um aluno na árvore
+struct Aluno* inserir(
+    struct Aluno *raiz,
+    int matricula,
+    char nome[]
+) {
+
+    // Se encontrou espaço vazio, cria o novo nó
+    if (raiz == NULL) {
+        return criarAluno(matricula, nome);
+    }
+
+    // Matrícula menor vai para a esquerda
+    if (matricula < raiz->matricula) {
+
+        raiz->esquerda =
+            inserir(raiz->esquerda, matricula, nome);
+
+    }
+
+    // Matrícula maior vai para a direita
+    else if (matricula > raiz->matricula) {
+
+        raiz->direita =
+            inserir(raiz->direita, matricula, nome);
+    }
+
+    return raiz;
+}
+
+// Busca um aluno pela matrícula
+struct Aluno* buscar(
+    struct Aluno *raiz,
+    int matricula
+) {
+
+    // Não encontrou ou encontrou o aluno
+    if (raiz == NULL ||
+        raiz->matricula == matricula) {
+
+        return raiz;
+    }
+
+    // Se a matrícula procurada é menor,
+    // procura na esquerda
+    if (matricula < raiz->matricula) {
+
+        return buscar(
+            raiz->esquerda,
+            matricula
+        );
+    }
+
+    // Se for maior, procura na direita
+    return buscar(
+        raiz->direita,
+        matricula
+    );
+}
+
+// Percorre a árvore em ordem
+void emOrdem(struct Aluno *raiz) {
+
+    if (raiz != NULL) {
+
+        // Esquerda
+        emOrdem(raiz->esquerda);
+
+        // Raiz
+        printf(
+            "Matricula: %d | Nome: %s\n",
+            raiz->matricula,
+            raiz->nome
+        );
+
+        // Direita
+        emOrdem(raiz->direita);
+    }
+}
+
+// Mostra visualmente a árvore
+void mostrarArvore() {
+
+    printf("\n");
+
+    printf("                50\n");
+    printf("              /    \\\n");
+    printf("            30      70\n");
+    printf("           /  \\    /  \\\n");
+    printf("         20   40  60   80\n");
+
+    printf("\n");
+}
+
+int main() {
+
+    struct Aluno *raiz = NULL;
+
+    // Inserção dos alunos
+    raiz = inserir(raiz, 50, "Ana");
+    raiz = inserir(raiz, 30, "Bruno");
+    raiz = inserir(raiz, 70, "Carlos");
+    raiz = inserir(raiz, 20, "Daniel");
+    raiz = inserir(raiz, 40, "Eduarda");
+    raiz = inserir(raiz, 60, "Fernando");
+    raiz = inserir(raiz, 80, "Gabriela");
+
+    // Visualização da árvore
+    printf("=== ARVORE DE ALUNOS ===\n");
+
+    mostrarArvore();
+
+    // Percurso em ordem
+    printf("=== ALUNOS EM ORDEM ===\n");
+
+    emOrdem(raiz);
+
+    // Busca
+    int busca = 60;
+
+    struct Aluno *resultado;
+
+    resultado = buscar(raiz, busca);
+
+    if (resultado != NULL) {
+
+        printf("\n=== BUSCA ===\n");
+
+        printf("Aluno encontrado!\n");
+        printf("Matricula: %d\n", resultado->matricula);
+        printf("Nome: %s\n", resultado->nome);
+
+    } else {
+
+        printf("\nAluno nao encontrado.\n");
+    }
+
+    return 0;
+}
