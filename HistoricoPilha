@@ -1,0 +1,102 @@
+#include <stdio.h>
+#include <string.h>
+
+#define TAM 5
+
+char historico[TAM][50];
+int topo = -1;
+
+void realizarAcao() {
+
+    char acao[50];
+
+    if (topo == TAM - 1) {
+        printf("\nHistorico cheio!\n");
+    }
+    else {
+
+        printf("\nDigite a acao realizada: ");
+        scanf(" %[^\n]", acao);
+
+        topo++;
+
+        strcpy(historico[topo], acao);
+
+        printf("Acao registrada!\n");
+    }
+}
+
+void desfazer() {
+
+    if (topo == -1) {
+        printf("\nNao existem acoes para desfazer.\n");
+    }
+    else {
+
+        printf("\nDesfazendo: %s\n", historico[topo]);
+
+        topo--;
+    }
+}
+
+void mostrarHistorico() {
+
+    int i;
+
+    if (topo == -1) {
+        printf("\nNenhuma acao registrada.\n");
+    }
+    else {
+
+        printf("\n--- HISTORICO ---\n");
+
+        for (i = topo; i >= 0; i--) {
+            printf("%s\n", historico[i]);
+        }
+    }
+}
+
+int main() {
+
+    int opcao;
+
+    do {
+
+        printf("\n========================\n");
+        printf("   SISTEMA DE EDICAO\n");
+        printf("========================\n");
+        printf("1 - Realizar acao\n");
+        printf("2 - Desfazer\n");
+        printf("3 - Ver historico\n");
+        printf("0 - Sair\n");
+        printf("========================\n");
+
+        printf("Escolha: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+
+            case 1:
+                realizarAcao();
+                break;
+
+            case 2:
+                desfazer();
+                break;
+
+            case 3:
+                mostrarHistorico();
+                break;
+
+            case 0:
+                printf("\nSistema encerrado.\n");
+                break;
+
+            default:
+                printf("\nOpcao invalida!\n");
+        }
+
+    } while (opcao != 0);
+
+    return 0;
+}
