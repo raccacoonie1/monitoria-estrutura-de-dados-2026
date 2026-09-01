@@ -1,0 +1,102 @@
+#include <stdio.h>
+
+#define TAM 5
+
+int pilha[TAM];
+int topo = -1;
+
+void push() {
+
+    int valor;
+
+    if (topo == TAM - 1) {
+        printf("\nPilha cheia!\n");
+    } 
+    else {
+
+        printf("\nDigite o valor que deseja empilhar: ");
+        scanf("%d", &valor);
+
+        topo++;
+        pilha[topo] = valor;
+
+        printf("Valor %d empilhado com sucesso!\n", valor);
+    }
+}
+
+void pop() {
+
+    if (topo == -1) {
+        printf("\nPilha vazia!\n");
+    } 
+    else {
+
+        printf("\nValor %d removido da pilha.\n", pilha[topo]);
+
+        topo--;
+    }
+}
+
+void mostrar() {
+
+    int i;
+
+    if (topo == -1) {
+        printf("\nPilha vazia!\n");
+    } 
+    else {
+
+        printf("\n--- PILHA ---\n");
+
+        for (i = topo; i >= 0; i--) {
+            printf("| %d |\n", pilha[i]);
+        }
+
+        printf("-------\n");
+    }
+}
+
+int main() {
+
+    int opcao;
+
+    do {
+
+        printf("\n====================\n");
+        printf("       MENU\n");
+        printf("====================\n");
+        printf("1 - Empilhar (PUSH)\n");
+        printf("2 - Desempilhar (POP)\n");
+        printf("3 - Mostrar pilha\n");
+        printf("0 - Sair\n");
+        printf("====================\n");
+
+        printf("Escolha uma opcao: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+
+            case 1:
+                push();
+                break;
+
+            case 2:
+                pop();
+                break;
+
+            case 3:
+                mostrar();
+                break;
+
+            case 0:
+                printf("\nPrograma encerrado.\n");
+                break;
+
+            default:
+                printf("\nOpcao invalida!\n");
+        }
+
+    } while (opcao != 0);
+
+    return 0;
+}
