@@ -1,0 +1,123 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define TAM 5
+
+int fila[TAM];
+int inicio = 0;
+int fim = -1;
+
+
+/* INSERIR NA FILA */
+void enqueue() {
+
+    int valor;
+
+    if (fim == TAM - 1) {
+
+        printf("\nFila cheia!\n");
+
+    } else {
+
+        printf("\nDigite o valor: ");
+        scanf("%d", &valor);
+
+        fim++;
+        fila[fim] = valor;
+
+        printf("\nValor %d inserido na fila!\n", valor);
+    }
+
+    system("pause");
+}
+
+
+/* REMOVER DA FILA */
+void dequeue() {
+
+    if (inicio > fim) {
+
+        printf("\nFila vazia!\n");
+
+    } else {
+
+        printf("\nValor removido: %d\n", fila[inicio]);
+
+        inicio++;
+    }
+
+    system("pause");
+}
+
+
+/* MOSTRAR FILA */
+void mostrar() {
+
+    int i;
+
+    if (inicio > fim) {
+
+        printf("\nFila vazia!\n");
+
+    } else {
+
+        printf("\n--------- FILA ---------\n");
+
+        for (i = inicio; i <= fim; i++) {
+            printf("| %d ", fila[i]);
+        }
+
+        printf("|\n------------------------\n");
+    }
+
+    system("pause");
+}
+
+
+int main() {
+
+    int opcao;
+
+    do {
+
+        system("cls");
+
+        printf("========================\n");
+        printf("          FILA\n");
+        printf("========================\n");
+        printf("1 - Enfileirar\n");
+        printf("2 - Desenfileirar\n");
+        printf("3 - Mostrar fila\n");
+        printf("0 - Sair\n");
+        printf("========================\n");
+
+        printf("\nEscolha uma opcao: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+
+            case 1:
+                enqueue();
+                break;
+
+            case 2:
+                dequeue();
+                break;
+
+            case 3:
+                mostrar();
+                break;
+
+            case 0:
+                printf("\nPrograma encerrado.\n");
+                break;
+
+            default:
+                printf("\nOpcao invalida!\n");
+                system("pause");
+        }
+
+    } while (opcao != 0);
+
+    return 0;
+}
