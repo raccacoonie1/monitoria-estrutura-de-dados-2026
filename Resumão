@@ -1,0 +1,90 @@
+RESUMÃO
+
+Busca sequencial
+Vantagem: Boa para pesquisa em dados desordenados
+Desvantagem: Precisa percorrer todos os elementos antes do resultado desejado
+Baixa complexidade, melhor cenário -> O(1) Pior -> O(n) caso tenha quer percorrer todos os elementos da lista
+
+Busca indexada
+Vantagem: Localiza por bloco ao invés de percorrer todos os elementos da lista/vetor
+Desvantagem: Uso elevado de memória para operações de escrita, a cada alteração ela exige mais de hardware pois os índices ocupam espaço físico na memória.
+Média complexidade, melhor cenário -> O(√1), Pior/médio caso -> O(√n)
+
+Busca binária
+Vantagem: Divide a lista no meio a cada comparação, descartando metade dos elementos.
+Desvantagem: Só funciona com os elementos ordenados antes.
+Melhor cenário → O(1): o elemento procurado está exatamente no meio logo na primeira comparação.
+Pior/médio caso → O(log n): a cada comparação, elimina metade dos elementos, posições que ainda poderiam conter o valor. Mesmo com alto volume de dados a comparação não cresce tanto.
+
+Estudo de caso
+
+Imagine que uma loja possui 1.000 produtos. Você precisa armazenar os produtos e permitir que o sistema encontre rapidamente um produto pelo código.
+1. Que tipo de dado temos?
+2. Precisamos organizar? Sim ou não?
+3. Precisamos efetuar buscas no sistema? Sim ou não
+4. Podemos fazer busca sequencial?
+
+Aula 2
+
+Pilha
+LIFO (Last In, First Out): Último a entrar é o primeiro a sair
+Exemplos de aplicações que utilizam a  estrutura de pilha: Histórico de navegador, ctrl+z
+Utilizam as funções: Push() para inserir elementos no vetor e Pop() para remover o elemento mais recente, Top() para consultar o elemento do topo
+
+Fila
+FIFO (First In, Fist Out): Primeiro a entrar é o primeiro a sair
+Exemplos de aplicação: fila de impressão; sistemas de atendimento; processamento de requisições; fila de processos.
+Utilizam as funções: Enqueue() para inserir elementos no vetor e Dequeue() para remover o primeiro elemento
+
+
+
+ÁRVORE BINÁRIA DE BUSCA (BST)
+
+Conceito: Estrutura hierárquica em que cada nó possui no máximo 2 filhos e segue uma regra de ordenação.
+
+Regra:
+Esquerda < Raiz < Direita
+
+Exemplo:
+
+    50
+   /  \
+ 30    70
+/  \  /  \
+
+20 40 60 80
+
+Relação com busca binária:
+A lógica é semelhante à busca binária em vetor:
+
+Compara o valor procurado com o elemento atual.
+Se for menor, vai para a esquerda.
+Se for maior, vai para a direita.
+Assim, elimina partes que não podem conter o valor.
+
+Exemplo: procurar 60
+
+60 > 50 → vai para direita
+60 < 70 → vai para esquerda
+60 = 60 → encontrou
+
+Busca binária: divide um vetor ordenado.
+BST: divide as possibilidades através dos nós.
+
+Complexidade da busca:
+
+Melhor caso: O(1) → valor está na raiz.
+Árvore equilibrada: O(log n)
+Pior caso: O(n) → árvore muito desequilibrada.
+
+Percursos:
+Pré-ordem: Raiz → Esquerda → Direita
+Em-ordem: Esquerda → Raiz → Direita
+Pós-ordem: Esquerda → Direita → Raiz
+
+Importante:
+Em uma BST, o percurso em-ordem apresenta os valores em ordem crescente.
+
+Para lembrar:
+BST = árvore + regra de ordenação + busca semelhante à busca binária.
+
