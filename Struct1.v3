@@ -1,0 +1,582 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_PRODUTOS 50
+
+// =====================================================
+// 1. ESTRUTURA DO PRODUTO
+// =====================================================
+
+typedef struct {
+    int codigo;
+    char nome[50];
+    char categoria[30];
+    float preco;
+} Produto;
+
+
+// =====================================================
+// 2. ESTRUTURA DO INDICE
+// =====================================================
+
+typedef struct {
+    int codigo;
+    int posicao;
+} Indice;
+
+
+// =====================================================
+// 3. LEITURA DE DADOS
+// =====================================================
+
+int lerInteiro() {
+
+    char entrada[100];
+    int valor;
+    char extra;
+
+    while (1) {
+
+        fgets(entrada, sizeof(entrada), stdin);
+
+        if (sscanf(entrada, "%d %c", &valor, &extra) == 1) {
+            return valor;
+        }
+
+        printf("Digite um numero inteiro: ");
+    }
+}
+
+
+float lerPreco() {
+
+    char entrada[100];
+    float valor;
+    char extra;
+
+    while (1) {
+
+        fgets(entrada, sizeof(entrada), stdin);
+
+        if (sscanf(entrada, "%f %c", &valor, &extra) == 1) {
+            return valor;
+        }
+
+        printf("Digite um valor numerico: R$ ");
+    }
+}
+
+
+void lerTexto(char texto[], int tamanho) {
+
+    fgets(texto, tamanho, stdin);
+
+    texto[strcspn(texto, "\n")] = '\0';
+
+}
+
+
+// =====================================================
+// 4. CARREGAR PRODUTOS INICIAIS
+// =====================================================
+
+void carregarProdutos(Produto produtos[], int *total) {
+
+    Produto iniciais[] = {
+
+        // HARDWARE
+        {105, "Memoria RAM 16GB", "Hardware", 289.90},
+        {102, "Processador Ryzen 5", "Hardware", 899.90},
+        {108, "SSD NVMe 1TB", "Hardware", 459.90},
+        {101, "Placa Mae B550", "Hardware", 749.90},
+        {110, "Placa de Video RTX 4060", "Hardware", 2199.90},
+
+        // PERIFERICOS
+        {205, "Mouse Gamer", "Perifericos", 129.90},
+        {202, "Teclado Mecanico", "Perifericos", 249.90},
+        {208, "Monitor 24 Polegadas", "Perifericos", 799.90},
+        {201, "Headset USB", "Perifericos", 159.90},
+        {210, "Webcam Full HD", "Perifericos", 189.90},
+
+        // REDES
+        {305, "Switch 24 Portas", "Redes", 599.90},
+        {302, "Roteador Gigabit", "Redes", 279.90},
+        {308, "Cabo de Rede CAT6", "Redes", 35.90},
+        {301, "Access Point Wi-Fi", "Redes", 389.90},
+        {310, "Placa de Rede Gigabit", "Redes", 89.90}
+
+    };
+
+    int quantidade = sizeof(iniciais) / sizeof(iniciais[0]);
+    int i;
+
+    for (i = 0; i < quantidade; i++) {
+        produtos[i] = iniciais[i];
+    }
+
+    *total = quantidade;
+
+}
+
+
+// =====================================================
+// 5. BUSCAR PRODUTO PELO CODIGO
+// =====================================================
+
+int buscarProdutoPorCodigo(
+    Produto produtos[],
+    int total,
+    int codigo
+) {
+
+    int i;
+
+    for (i = 0; i < total; i++) {
+
+        if (produtos[i].codigo == codigo) {
+            return i;
+        }
+
+    }
+
+    return -1;
+
+}
+
+
+// =====================================================
+// 6. CONSTRUIR INDICE
+// =====================================================
+
+void construirIndice(
+    Produto produtos[],
+    Indice indice[],
+    int total
+) {
+
+    int i;
+    int j;
+
+    // Copia codigo e posicao dos produtos
+
+    for (i = 0; i < total; i++) {
+
+        indice[i].codigo = produtos[i].codigo;
+        indice[i].posicao = i;
+
+    }
+
+
+    // Ordena o indice pelo codigo
+
+    for (i = 1; i < total; i++) {
+
+        Indice atual = indice[i];
+
+        j = i - 1;
+
+        while (j >= 0 && indice[j].codigo > atual.codigo) {
+
+            indice[j + 1] = indice[j];
+
+            j--;
+
+        }
+
+        indice[j + 1] = atual;
+
+    }
+
+}
+
+
+// =====================================================
+// 7. BUSCA INDEXADA
+// =====================================================
+
+int buscaIndexada(
+    Indice indice[],
+    int total,
+    int codigo
+) {
+
+    int inicio = 0;
+    int fim = total - 1;
+    int meio;
+
+    while (inicio <= fim) {
+
+        meio = (inicio + fim) / 2;
+
+        if (indice[meio].codigo == codigo) {
+
+            return indice[meio].posicao;
+
+        }
+
+        else if (codigo < indice[meio].codigo) {
+
+            fim = meio - 1;
+
+        }
+
+        else {
+
+            inicio = meio + 1;
+
+        }
+
+    }
+
+    return -1;
+
+}
+
+
+// =====================================================
+// 8. CADASTRAR PRODUTO
+// =====================================================
+
+void cadastrarProduto(Produto produtos[], int *total) {
+
+    int codigo;
+
+    system("cls");
+
+    if (*total >= MAX_PRODUTOS) {
+
+        printf("Estoque cheio!\n\n");
+        system("pause");
+        return;
+
+    }
+
+    printf("========================================\n");
+    printf("          CADASTRO DE PRODUTO\n");
+    printf("========================================\n\n");
+
+
+    printf("Digite o codigo: ");
+    codigo = lerInteiro();
+
+    if (codigo <= 0 ||
+        buscarProdutoPorCodigo(produtos, *total, codigo) != -1) {
+
+        printf("\nCodigo invalido ou ja cadastrado!\n\n");
+        system("pause");
+        return;
+
+    }
+
+    produtos[*total].codigo = codigo;
+
+
+    printf("Digite o nome: ");
+    lerTexto(produtos[*total].nome, 50);
+
+    if (strlen(produtos[*total].nome) == 0) {
+        printf("\nNome nao pode ficar vazio!\n\n");
+        system("pause");
+        return;
+    }
+
+
+    printf("Digite a categoria: ");
+    lerTexto(produtos[*total].categoria, 30);
+
+    if (strlen(produtos[*total].categoria) == 0) {
+        printf("\nCategoria nao pode ficar vazia!\n\n");
+        system("pause");
+        return;
+    }
+
+
+    printf("Digite o preco: R$ ");
+    produtos[*total].preco = lerPreco();
+
+    if (produtos[*total].preco <= 0) {
+        printf("\nPreco invalido!\n\n");
+        system("pause");
+        return;
+    }
+
+
+    (*total)++;
+
+    printf("\nProduto cadastrado com sucesso!\n\n");
+
+    system("pause");
+
+}
+
+
+// =====================================================
+// 9. LISTAR PRODUTOS
+// =====================================================
+
+void listarProdutos(Produto produtos[], int total) {
+
+    int i;
+
+    system("cls");
+
+    printf("========================================\n");
+    printf("       PRODUTOS CADASTRADOS (%d)\n", total);
+    printf("========================================\n\n");
+
+    if (total == 0) {
+
+        printf("Nenhum produto cadastrado.\n\n");
+
+    }
+
+    else {
+
+        for (i = 0; i < total; i++) {
+
+            printf("----------------------------------------\n");
+
+            printf("Codigo    : %d\n", produtos[i].codigo);
+            printf("Nome      : %s\n", produtos[i].nome);
+            printf("Categoria : %s\n", produtos[i].categoria);
+            printf("Preco     : R$ %.2f\n", produtos[i].preco);
+
+        }
+
+        printf("----------------------------------------\n\n");
+
+    }
+
+    system("pause");
+
+}
+
+
+// =====================================================
+// 10. CONSULTAR PRODUTO COM BUSCA INDEXADA
+// =====================================================
+
+void consultarProduto(
+    Produto produtos[],
+    Indice indice[],
+    int total
+) {
+
+    int codigo;
+    int posicao;
+
+    system("cls");
+
+    printf("========================================\n");
+    printf("             BUSCA INDEXADA\n");
+    printf("========================================\n\n");
+
+    if (total == 0) {
+
+        printf("Nenhum produto cadastrado.\n\n");
+        system("pause");
+        return;
+
+    }
+
+
+    printf("Digite o codigo do produto: ");
+    codigo = lerInteiro();
+
+
+    // Constroi o indice atualizado
+
+    construirIndice(produtos, indice, total);
+
+
+    // Realiza a busca binaria no indice
+
+    posicao = buscaIndexada(indice, total, codigo);
+
+
+    if (posicao == -1) {
+
+        printf("\nProduto nao encontrado!\n\n");
+
+    }
+
+    else {
+
+        printf("\nProduto encontrado!\n\n");
+
+        printf("Codigo    : %d\n", produtos[posicao].codigo);
+        printf("Nome      : %s\n", produtos[posicao].nome);
+        printf("Categoria : %s\n", produtos[posicao].categoria);
+        printf("Preco     : R$ %.2f\n\n", produtos[posicao].preco);
+
+    }
+
+    system("pause");
+
+}
+
+
+// =====================================================
+// 11. REMOVER PRODUTO
+// =====================================================
+
+void removerProduto(Produto produtos[], int *total) {
+
+    int codigo;
+    int posicao;
+    int i;
+
+    system("cls");
+
+    printf("========================================\n");
+    printf("             REMOVER PRODUTO\n");
+    printf("========================================\n\n");
+
+    if (*total == 0) {
+
+        printf("Nenhum produto cadastrado.\n\n");
+        system("pause");
+        return;
+
+    }
+
+
+    printf("Digite o codigo do produto: ");
+    codigo = lerInteiro();
+
+
+    posicao = buscarProdutoPorCodigo(produtos, *total, codigo);
+
+
+    if (posicao == -1) {
+
+        printf("\nProduto nao encontrado!\n\n");
+        system("pause");
+        return;
+
+    }
+
+
+    // Desloca os produtos para preencher a posicao
+
+    for (i = posicao; i < *total - 1; i++) {
+
+        produtos[i] = produtos[i + 1];
+
+    }
+
+    (*total)--;
+
+
+    printf("\nProduto removido com sucesso!\n\n");
+
+    system("pause");
+
+}
+
+
+// =====================================================
+// 12. MAIN
+// =====================================================
+
+int main() {
+
+    Produto estoque[MAX_PRODUTOS];
+
+    Indice indice[MAX_PRODUTOS];
+
+    int totalProdutos = 0;
+    int opcao;
+
+
+    carregarProdutos(estoque, &totalProdutos);
+
+
+    do {
+
+        system("cls");
+
+        printf("================================\n");
+        printf("       SISTEMA DE PRODUTOS TI\n");
+        printf("================================\n\n");
+
+        printf("1. Cadastrar Produto\n");
+        printf("2. Listar Produtos\n");
+        printf("3. Remover Produto\n");
+        printf("4. Buscar Produto (Indexada)\n");
+        printf("0. Sair\n");
+
+        printf("\n================================\n");
+
+        printf("Escolha uma opcao: ");
+        opcao = lerInteiro();
+
+
+        switch (opcao) {
+
+            case 1:
+
+                cadastrarProduto(estoque, &totalProdutos);
+                break;
+
+
+            case 2:
+
+                listarProdutos(estoque, totalProdutos);
+                break;
+
+
+            case 3:
+
+                removerProduto(estoque, &totalProdutos);
+                break;
+
+
+            case 4:
+
+                consultarProduto(
+                    estoque,
+                    indice,
+                    totalProdutos
+                );
+
+                break;
+
+
+            case 0:
+
+                printf("\nSaindo do sistema... Ate logo!\n\n");
+                break;
+
+
+            default:
+
+                printf("\nOpcao invalida!\n\n");
+                system("pause");
+
+        }
+
+    } while (opcao != 0);
+
+
+    return 0;
+
+}
+
+int buscarProdutoPorCodigo(
+    Produto produtos[],
+    int total,
+    int codigo
+) {
+    int i;
+
+    for (i = 0; i < total; i++) {
+        if (produtos[i].codigo == codigo) {
+            return i;
+        }
+    }
+
+    return -1;
+}
