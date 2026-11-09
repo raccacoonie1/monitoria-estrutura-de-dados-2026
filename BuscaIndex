@@ -1,0 +1,63 @@
+#include <stdio.h>
+
+int main() {
+
+    // 1. Vetor principal
+    int numeros[] = {
+        10, 20, 30,
+        40, 50, 60,
+        70, 80, 90
+    };
+
+    // 2. Indice auxiliar
+    int indice[] = {10, 40, 70};
+
+    // 3. Posicoes iniciais de cada bloco
+    int posicoes[] = {0, 3, 6};
+
+    // 4. Definindo o numero procurado
+    int procurado == 50;
+
+    int inicio = -1;
+    int encontrado = -1;
+    int i;
+
+    // 5. Localizando o bloco correto
+    for (i = 0; i < 3; i++) {
+
+        if (indice[i] <= procurado) {
+
+            inicio = posicoes[i];
+
+        }
+    }
+
+    // 6. Procurando dentro do bloco
+    if (inicio != -1) {
+
+        for (i = inicio; i < inicio + 3; i++) {
+
+            if (numeros[i] == procurado) {
+
+                encontrado = i;
+                break;
+
+            }
+        }
+    }
+
+    // 7. Exibindo o resultado
+    if (encontrado != -1) {
+
+        printf("Numero encontrado!\n");
+        printf("Valor: %d\n", procurado);
+        printf("Posicao: %d\n", encontrado);
+
+    } else {
+
+        printf("Numero nao encontrado!\n");
+
+    }
+
+    return 0;
+}
