@@ -1,0 +1,70 @@
+
+#include <stdio.h>
+
+int main() {
+
+    // 1. Vetor ordenado
+    int numeros[] = {
+        10, 20, 30, 40, 50,
+        60, 70, 80, 90
+    };
+
+    // 2. Definindo o numero procurado
+    int procurado = 70;
+
+    // 3. Definindo os limites da busca
+    int inicio = 0;
+    int fim = 8;
+
+    // 4. Variaveis de controle
+    int meio;
+    int encontrado = -1;
+
+    // 5. Iniciando a busca binaria
+    while (inicio <= fim) {
+
+        // Calculando a posicao do meio
+        meio = (inicio + fim) / 2;
+
+        printf("Verificando posicao %d: %d\n",
+               meio, numeros[meio]);
+
+        // 6. Verificando se encontrou o numero
+        if (numeros[meio] == procurado) {
+
+            encontrado = meio;
+            break;
+
+        }
+
+        // 7. Procurando na metade direita
+        else if (numeros[meio] < procurado) {
+
+            inicio = meio + 1;
+
+        }
+
+        // 8. Procurando na metade esquerda
+        else {
+
+            fim = meio - 1;
+
+        }
+
+    }
+
+    // 9. Exibindo o resultado
+    if (encontrado != -1) {
+
+        printf("\nNumero encontrado!\n");
+        printf("Valor: %d\n", procurado);
+        printf("Posicao: %d\n", encontrado);
+
+    } else {
+
+        printf("\nNumero nao encontrado!\n");
+
+    }
+
+    return 0;
+}
